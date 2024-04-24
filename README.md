@@ -1,1 +1,1 @@
-# Uganda_DEGs
+# Uganda DEGs
