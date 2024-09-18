@@ -10,6 +10,8 @@ Understanding the evolutionary processes leading to differentiation within speci
 ##### Figure 1. 
 Tree Plot of subspecies present in East Africa. Tree plot considering subspecies present in East Africa, the tree was made by clustering principal component analysis results, which was performed using ~6,000,000 WGS SNPs. Labels are coloured according to the subspecies. Newly sequenced Rwenzori mountains samples are represented with roman number labels I – VII and RW.
 
+#### Figure 2.
+A) Pairwise FST comparison of East African monticola and scutellata populations. Blue and Green highlighted areas represent SNPs falling inside r7 and r9 respectively. The black line in (A) is an average of sliding windows of 1000 non overlapping SNPs. B) and C) Zoom in of chromosome 7 (CM009937.2) and chromosome 9 (CM009939.2) given a sliding windows of 1000 non overlapping SNPs (red lines) it is possible to observe that the 
 
 ## Index of Tables
 
