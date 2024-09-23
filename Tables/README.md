@@ -31,7 +31,7 @@ The frequency reported is the frequency of the INV allele over the overall numbe
 ### Table 3. GO enrichment analysis using DEGs. 
 The threshold selected was ±0.7 log2FC and p-value ≤ 0.05. MF: Molecular Function, BP: Biological Process, CC: Cellular component and KEGG: Kyoto Encyclopedia of Genes end Genomes.
 
-| Gene Ontology | Description | Source | p-value |
+| Gene Ontology | Description | Source | pvalue |
 | -------- | ------- | ------ | ---------- |
 | GO:0016491 | oxidoreductase activity | MF | 1.11e-03 |
 | GO:0102965 | alcohol-forming long-chain fatty acyl-CoA reductase activity |	MF | 8.60e-03 |
