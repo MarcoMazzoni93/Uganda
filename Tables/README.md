@@ -34,7 +34,7 @@ The threshold selected was ±0.7 log2FC and p-value ≤ 0.05. MF: Molecular Func
 | Gene Ontology | Description | Source | pvalue |
 | -------- | ------- | ------ | ---------- |
 | GO:0016491 | oxidoreductase activity | MF | 0.0011 |
-| GO:0102965 | alcohol-forming long-chain fatty acyl-CoA reductase activity |	MF | 0.00086 |
+| GO:0102965 | alcohol-forming long-chain fatty acyl-CoA reductase activity |	MF | 0.0086 |
 | GO:0016620 | oxidoreductase activity, acting on the aldehyde or oxo group of donors, NAD or NADP as acceptor | MF | 0.0277 |
 | GO:0016885 | ligase activity, forming carbon-carbon bonds |	MF | 0.0353 |
 | GO:0080019 | alcohol-forming very long-chain fatty acyl-CoA reductase activity | MF | 0.0498 |
@@ -62,3 +62,15 @@ The threshold selected was ±0.7 log2FC and p-value ≤ 0.05. MF: Molecular Func
 | KEGG:01200 | Carbon metabolism | KEGG | 0.0168 | 
 | KEGG:00030 | Pentose phosphate pathway | KEGG | 0.0286 | 
 | KEGG:04146 | Peroxisome | KEGG | 0.0315 |
+
+### Table 4. Effect of the r7 and r9 inversion on gene expression when only homozygous inverted honey bees were compared to homozygous non-inverted.
+
+| Gene ID | Description | Region | log2FC | pvalue |
+| ------- | ----------- | ------ | ------ | ------ |
+|LOC412994 | octopamine receptor beta-3R | r7 | 1.285 | 4.79e-06 |
+LOC413192	protein HGH1 homolog	r7	-0.939	3.00e-04
+LOC413698	octopamine receptor beta-1R	r7	1.583	1.91e-07
+LOC552005	uncharacterized	r7	-2.253	1.8e-03
+LOC552586	cytochrome c oxidase assembly factor 7 homolog	r7	-1.075	2.00e-03
+LOC409025	apolipoprotein D	r9	-1.051	4.61e-02
+
