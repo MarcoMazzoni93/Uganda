@@ -5,15 +5,11 @@
 
 Understanding the evolutionary processes leading to differentiation within species is a central goal in population biology. Among these, local adaptation is a process where organisms evolve traits that enhance their survival and reproduction in specific local environments, making them more suited to these conditions compared to other members of the same species. Honey bees (Apis mellifera) in East African mountains are well adapted to highland environments, showing different behaviours and characteristics compared to lowland bees. Despite these differences, highland and lowland honey bees share very low genome wide genetic differentiation with the exception of two segments on chromosome 7 (r7) and chromosome 9 (r9) which were previously identified as chromosomal inversions. These inversions are extremely rare in lowland populations, suggesting a key role in the adaptation to high elevation habitats. In this study, we sequenced 24 new honey bees collected in the Western part of Uganda and compared them with the genomes of honey bees from Mau region and Mount Kenya in Kenya. We show that the chromosomal inversions play a pivotal role for local adaptation in both Kenya and Uganda. Moreover, we ran a genome wide selection scan to detect other parts of the genome that could be involved in high altitude adaptation. By obtaining transcriptome data of highland and lowland honey bees from Uganda we have for the first time gained insights into differentially expressed genes between the high mountain and savannah bees. This paves the way to clarify the interplay of r7 and r9 with gene expression. Our study will contribute to a better understanding of the evolutionary processes in local honey bee populations driven by environmental conditions. In addition, we have started to unravel the regulatory network underlying A. mellifera adaptation to high elevation habitats.
 
-
 ## Index of figures
-##### Figure 1. 
-Tree Plot of subspecies present in East Africa. Tree plot considering subspecies present in East Africa, the tree was made by clustering principal component analysis results, which was performed using ~6,000,000 WGS SNPs. Labels are coloured according to the subspecies. Newly sequenced Rwenzori mountains samples are represented with roman number labels I – VII and RW.
-
-#### Figure 2.
-A) Pairwise FST comparison of East African monticola and scutellata populations. Blue and Green highlighted areas represent SNPs falling inside r7 and r9 respectively. The black line in (A) is an average of sliding windows of 1000 non overlapping SNPs. B) and C) Zoom in of chromosome 7 (CM009937.2) and chromosome 9 (CM009939.2) given a sliding windows of 1000 non overlapping SNPs (red lines) it is possible to observe that the 
+The index of figures is in the directory *./Figures*
 
 ## Index of Tables
+The index of figures is in the directory *./Tables*
 
 ## Index of Scripts
-
+The index of figures is in the directory *./Scripts*
