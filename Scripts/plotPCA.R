@@ -33,7 +33,7 @@ clus4 = cutree(h, 5)
 plot(as.phylo(h), type = "fan", tip.color = colors[clus4],
      label.offset = 0.005, cex = 0.7)
 
-out.tree = write.tree(as.phylo(h))
+out.tree = write.tree(as.phylo(h)) ### This output can be used as input in iTOL
 
 PC1var = Eval.df[1, "V1"]/sum(Eval.df$V1) * 100
 PC2var = Eval.df[2, "V1"]/sum(Eval.df$V1) * 100
