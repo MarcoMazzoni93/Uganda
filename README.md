@@ -9,7 +9,7 @@ Understanding the evolutionary processes leading to differentiation within speci
 The index of figures is in the directory *./Figures*
 
 ## Index of Tables
-The index of figures is in the directory *./Tables*
+The index of tables is in the directory *./Tables*
 
 ## Index of Scripts
-The index of figures is in the directory *./Scripts*
+The index of scripts is in the directory *./Scripts*
