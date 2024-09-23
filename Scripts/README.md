@@ -32,3 +32,6 @@ Script used to make Transcriptome index (Amel.idx) and run callisto to quantify 
 
 ### venn_diag.R
 Rscript used to plot shared and unique genes detected from XP-nsl analysis
+
+### tx2gene.py
+Simple python script to create a tx2gene file used in the DESeq2 pipeline
