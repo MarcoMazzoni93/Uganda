@@ -1,0 +1,376 @@
+---
+title: "Differential_gene_expression_analysis"
+author: "Marco Mazzoni"
+date: "August 8 2023"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "/media/fortytwo/8492bde6-51b4-4142-9947-ca7ef96cd363/ZAPHOD/RNA-seq/Kallisto/UGD/UGD_NEW/")
+```
+
+
+```{r libraries}
+library(DESeq2)
+library(tximport)
+library(ggplot2)
+library(GEOquery)
+library(readr)
+library(CorLevelPlot)
+library(tidyverse)
+library(dplyr)
+library(ggrepel)
+library(sleuth)
+library(impute)
+library(WGCNA)
+library(gridExtra)
+library(igraph)
+library(rstatix)
+```
+
+```{r Load Data and preprocessing}
+
+dir <- getwd()
+
+tx2_gene <- read.csv("tx2gene.txt", sep = "\t", header = FALSE)
+colnames(tx2_gene)[1] <- "TXNAME"
+colnames(tx2_gene)[2] <- "GENEID"
+
+#Samples from Kallisto
+samples <- read.table("r7_inv_samples.txt", header = TRUE, sep = "\t")
+rownames(samples) <- samples$run
+files <- file.path(dir, samples$run, "abundance.tsv")
+
+samples$condition <- factor(samples$condition, levels = c("High", "Low"))
+samples$r7 <- factor(samples$r7, levels = c("STD", "HET", "INV"))
+
+txi <- tximport(files, type = "kallisto", tx2gene = tx2_gene)
+dds <- DESeqDataSetFromTximport(txi, colData = samples, design = ~r7)
+dds <- DESeq(dds)
+
+
+r7_genes <- c("102656070", "552005", "412896", "409158", "552600", "100576146", "411814", "552586", "413699", "412994", "413192", "726399", "726699", "413698", "100576110", "411683", "726656", "100578523", "411685", "413721", "413720", "100576260", "552491", "102655859", "100576298")
+
+
+d3d <- function(r7_gene){ ### plot and write the differences between three groups given a gene name in the dataset
+  data <- plotCounts(dds, 
+                     gene = "412994", 
+                     intgroup = c("r7"), 
+                     returnData = TRUE)
+  plot <- ggplot(data, aes(x=interaction(r7), y=count, color=r7)) + 
+    geom_point(size=3) + 
+    labs(x = "Inversion status",
+         y = "Counts") + 
+    ggtitle(paste("LOC", r7_gene, sep = "")) + 
+    theme(plot.title = element_text(size = 16),
+        axis.text.x = element_text(size = 18),
+        axis.text.y = element_text(size = 14),
+        axis.title.x = element_text(size = 14),
+        axis.title.y = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12))
+    scale_y_log10()
+  
+  ggsave(filename = paste("./LOC", r7_gene, ".png", sep = ""), height = 7.5, width = 7.5, dpi = 300)
+  
+  
+  norm <- shapiro.test(data$count)
+  if (norm$p.value <= 0.05){
+    print(paste("Data of ", r7_gene, "non-normal!", sep = " "))
+    print("implementing Kruskal-Wallis with Dunn Posthoc test...")
+    
+    KT <- data %>% kruskal_test(count ~ r7)
+    Dunn <- data %>% dunn_test(count ~ r7, p.adjust.method = "BY") 
+    write.table(Dunn, file = paste("./byDunn_LOC", "412994", ".csv", sep = ""))
+    
+  } else {  
+    print("Data is normal distributed...")
+    print("Proceeding with ANOVA and TukeyHSD")
+    
+    df_data_count <- as.data.frame(matrix(0, ncol = 3, nrow = 4))
+    df_data_count$V1 <- data$count[1:4]
+    df_data_count$V2 <- data$count[5:8]
+    df_data_count$V3 <- data$count[9:12]
+    colnames(df_data_count) <- c("INV", "STD", "HET")
+    
+    df.aov <- pivot_longer(df_data_count, everything(), names_to = 'r7', values_to = 'Counts')
+    
+    anova.aov <- aov(df.aov$Counts ~ df.aov$r7)
+    posthoc <- TukeyHSD(x = anova.aov, "df.aov$r7", conf.level = 0.95)
+    
+    posthoc.df <- as.data.frame(posthoc$`df.aov$r7`)
+    write.table(posthoc.df, file = paste("./TukeyHSD_LOC", r7_gene, ".csv", sep = ""))
+  }
+  return(0)
+}
+
+for (name in r7_genes){
+  print(name)
+  d3d(name)
+  
+}
+
+
+
+```
+
+```{r DESEQ2 main analysis}
+#Data import
+dir <- getwd()
+
+tx2_gene <- read.csv("tx2gene.txt", sep = "\t", header = FALSE)
+colnames(tx2_gene)[1] <- "TXNAME"
+colnames(tx2_gene)[2] <- "GENEID"
+
+#Samples from Kallisto
+samples <- read.table("r7_inv_samples.txt", header = TRUE, sep = "\t")
+rownames(samples) <- samples$run
+files <- file.path(dir, samples$run, "abundance.tsv")
+
+samples$condition <- factor(samples$condition, levels = c("High", "Low"))
+
+txi <- tximport(files, type = "kallisto", tx2gene = tx2_gene)
+
+
+#DESEQ object creation
+dds <- DESeqDataSetFromTximport(txi, colData = samples, design = ~condition)
+dds <- DESeq(dds)
+
+smallestGroupSize <- 1
+keep <- rowSums(counts(dds) > 5)
+dds <- dds[keep,]
+
+res <- results(dds, alpha = 0.05, contrast = c("r7","STD","HET")) #Low is the reference
+res_complete <- res
+res <- res[order(res$padj),]
+res <- head(res, n = sum(res$padj < 0.05, na.rm = TRUE))
+
+#Write results to CSV file
+write.csv(res, file = "stdhet_r7.csv")
+write.csv(res_complete, file = "std_het_r7_complete.csv")
+```
+
+# Volcano Plot
+```{r volcano plot}
+high_vs_low <- read.delim("/media/fortytwo/8492bde6-51b4-4142-9947-ca7ef96cd363/ZAPHOD/RNA-seq/Kallisto/UGD/UGD_HvL_complete.csv",
+                                  header = TRUE,
+                                  sep = ",")  
+
+colnames(high_vs_low)[1] <- "GeneID"
+
+high_vs_low <- janitor::clean_names(high_vs_low)  
+
+
+high_vs_low <- high_vs_low %>%
+    select(symbol,
+         log2fold_change,
+         padj)
+
+
+DEGs <- c("Mrjp5", "LOC100578860", "LOC102656919", "Mrjp6", "LOC113218518", "LOC113219069", "LOC410149", "LOC102654656", "LOC725202", "LOC726990", "LOC410245", "LOC102654581", "Hbg3", "LOC413627", "Mir276", "Mir317", "Mir34", "LOC102654995", "LOC724654", "LOC410432", "LOC100577039", "LOC107965318", "LOC725420", "CSP1", "LOC552771", "LOC551094", "LOC411202", "LOC410484", "LOC107964635", "LOC726459", "LOC102655203", "LOC724865", "LOC100577192", "LOC724642", "LOC411983", "LOC727028", "LOC552712", "LOC411602", "LOC113218526", "LOC410730", "LOC552447", "LOC113219221", "LOC408361", "LOC550804", "LOC102653815", "LOC725489", "LOC725346", "LOC724252", "LOC408989", "LOC552724", "LOC100576912", "LOC107965218", "Tg", "LOC412815", "LOC551533", "LOC102656130", "LOC413679", "LOC552149", "LOC100578708", "FAR1", "LOC408650", "LOC408470", "LOC550686", "LOC410793", "LOC725343", "LOC552417", "LOC411813", "LOC408817", "LOC726818", "LOC410993", "LOC413137", "LOC413867", "LOC100577699", "LOC408622", "LOC552110", "LOC412166", "LOC552342", "LOC552211", "LOC551678", "LOC412678", "LOC408517", "LOC409061", "LOC551806", "LOC410837", "LOC551894", "LOC552401", "LOC552286", "LOC551765", "LOC100577603", "LOC726248", "LOC107964219", "LOC550956", "LOC409341", "LOC726323", "LOC413168", "LOC551553", "Hsc70-4", "LOC551232", "LOC410308", "LOC725325", "LOC552282", "LOC551837", "LOC552419", "LOC412948", "LOC724293", "LOC724612", "LOC726444", "LOC408904", "LOC412876", "LOC412914", "LOC411699", "LOC409360", "LOC411889", "LOC551549", "LOC726482", "LOC410632", "LOC410122", "LOC413517", "LOC726045", "LOC552007", "LOC552678", "LOC726883", "LOC724540", "LOC550738", "LOC552036", "LOC551103", "LOC410108", "LOC107964305", "LOC724205", "LOC100576585", "LOC102655144", "LOC107964460", "LOC102653977", "nAChRa1", "LOC102656822", "LOC113218723", "LOC411282", "LOC107964289", "LOC725461", "LOC552231", "LOC552805", "LOC102653896", "LOC551252", "LOC725190", "LOC107964906", "LOC102655639", "LOC113219265", "LOC413319", "LOC100577707", "LOC409060", "LOC107965706", "LOC107965368", "LOC100578952", "LOC413730", "LOC107964569", "LOC409402", "LOC107965883", "LOC100576767", "LOC413204", "LOC107965873", "LOC100576621", "LOC100576644", "LOC102656140", "LOC107963974", "TpnCI", "LOC726279", "LOC107964817", "LOC726288", "LOC100578055")
+
+DEG_Ss_Ugd <- c("LOC411053", "LOC411569", "LOC102656070", "LOC408315", "LOC551356", "LOC551123", "LOC552844", "LOC408343", "LOC413698",
+                "LOC100578929", "LOC725031", "LOC726656")
+
+high_vs_low <- high_vs_low %>%
+  mutate(gene_type = case_when((log2fold_change > -0.7 & log2fold_change < 0.7) & padj <= 0.05 & symbol %in% DEG_Ss_Ugd ~ "ns - Selscan",
+                               log2fold_change >= 0.7 & padj <= 0.05 & symbol %in% DEG_Ss_Ugd  ~ "Up - Selscan",
+                               log2fold_change <= -0.7 & padj <= 0.05 & symbol %in% DEG_Ss_Ugd  ~ "Down - Selscan",
+                               log2fold_change <= -0.7 & padj <= 0.05 & symbol %in% DEGs ~ "Downregulated",
+                               log2fold_change >= 0.7 & padj <= 0.05 & symbol %in% DEGs  ~ "Upregulated",
+                               TRUE ~ "ns"))   
+
+high_vs_low <- high_vs_low %>%
+  mutate(gene_type = case_when(log2fold_change >= 0.7 & padj <= 0.05 ~ "Upregulated",
+                               log2fold_change <= -0.7 & padj <= 0.05 ~ "Downregulated",
+                               TRUE ~ "ns"))   
+
+
+
+write.table(high_vs_low, "/media/fortytwo/8492bde6-51b4-4142-9947-ca7ef96cd363/ZAPHOD/RNA-seq/Kallisto/UGD/UGD_NEW/volcano_plot_data.csv", sep = "\t")
+
+high_vs_low <- read.csv(file = "/media/fortytwo/8492bde6-51b4-4142-9947-ca7ef96cd363/ZAPHOD/RNA-seq/Kallisto/UGD/UGD_NEW/volcano_plot_data.csv", header = TRUE)
+high_vs_low <- na.omit(high_vs_low)
+
+
+high_vs_low %>%
+  distinct(gene_type) %>%
+  pull()  
+
+levels(as.factor(high_vs_low$gene_type))
+
+Selscan_up_Volc_LOC413698 <- c("LOC413698")
+Selscan_ns_Volc_LOC102656070 <- c("LOC102656070")
+Selscan_ns_Volc_LOC551356 <- c("LOC551356")
+Selscan_ns_Volc_LOC551123 <- c("LOC551123")
+Selscan_ns_Volc_LOC552844 <- c("LOC552844")
+Selscan_ns_Volc_LOC408343 <- c("LOC408343")
+Selscan_ns_Volc_LOC726656 <- c("LOC726656")
+Selscan_ns_Volc_LOC408315 <- c("LOC408315")
+Selscan_dw_Volc_LOC100578929 <- c("LOC100578929")
+Selscan_dw_Volc_LOC725031 <- c("LOC725031")
+Selscan_dw_Volc_LOC411569 <- c("LOC411569")
+Selscan_dw_Volc_LOC411053 <- c("LOC411053")
+
+gp_Selscan_up_Volc_LOC413698 <- high_vs_low %>% filter(symbol %in% Selscan_up_Volc_LOC413698)
+gp_Selscan_ns_Volc_LOC102656070 <- high_vs_low %>% filter(symbol %in% Selscan_ns_Volc_LOC102656070)
+gp_Selscan_ns_Volc_LOC551356 <- high_vs_low %>% filter(symbol %in% Selscan_ns_Volc_LOC551356)
+gp_Selscan_ns_Volc_LOC551123 <- high_vs_low %>% filter(symbol %in% Selscan_ns_Volc_LOC551123)
+gp_Selscan_ns_Volc_LOC552844 <- high_vs_low %>% filter(symbol %in% Selscan_ns_Volc_LOC552844)
+gp_Selscan_ns_Volc_LOC408343 <- high_vs_low %>% filter(symbol %in% Selscan_ns_Volc_LOC408343)
+gp_Selscan_ns_Volc_LOC726656 <- high_vs_low %>% filter(symbol %in% Selscan_ns_Volc_LOC726656)
+gp_Selscan_ns_Volc_LOC408315 <- high_vs_low %>% filter(symbol %in% Selscan_ns_Volc_LOC408315)
+gp_Selscan_dw_Volc_LOC100578929 <- high_vs_low %>% filter(symbol %in% Selscan_dw_Volc_LOC100578929)
+gp_Selscan_dw_Volc_LOC725031 <- high_vs_low %>% filter(symbol %in% Selscan_dw_Volc_LOC725031)
+gp_Selscan_dw_Volc_LOC411569 <- high_vs_low %>% filter(symbol %in% Selscan_dw_Volc_LOC411569)
+gp_Selscan_dw_Volc_LOC411053 <- high_vs_low %>% filter(symbol %in% Selscan_dw_Volc_LOC411053)
+
+# gp_DEGs_Ss_hl_up <- high_vs_low %>% filter(symbol %in% DEGs_Ss_hl_up)
+# gp_DEGs_Ss_hl_down <- high_vs_low %>% filter(symbol %in% DEGs_Ss_hl_down)
+# gp_DEGs_Ss_Ll_down <- high_vs_low %>% filter(symbol %in% DEGs_Ss_Ll_down)
+# gp_DEGs_Ss_Ll_up <- high_vs_low %>% filter(symbol %in% DEGs_Ss_Ll_up)
+
+
+cols <- c("Upregulated" = "#ffad73", "Downregulated" = "#26b3ff", "ns" = "grey") 
+sizes <- c("Upregulated" = 100, "Downregulated" = 100, "ns" = 50) 
+alphas <- c("Upregulated" = 0.8, "Downregulated" = 0.8, "ns" = 0.5)
+
+# cols <- c("#ffad73", "grey", "#26b3ff") 
+# sizes <- c("Up" = 100, "Down" = 100, "ns" = 50) 
+# alphas <- c("Up" = 0.8, "Down" = 0.8, "ns" = 0.5)
+
+
+
+# sig_hl_genes <- high_vs_low %>%
+# filter(symbol %in% c("LOC410149", "LOC410484", "LOC411983", "LOC725489", "LOC552724", "LOC100576912", "Tg", "LOC412815", "LOC552149", "FAR1", "LOC410793", "LOC552417", "LOC411813", "LOC412166", "LOC552342", "LOC552286", "LOC551765", "LOC725325", "LOC412876", "LOC102656822", "LOC113218723", "LOC413319", "LOC413698", "LOC107965368", "LOC100578055"))
+
+Volc <- ggplot(data = high_vs_low,
+       aes(x = log2fold_change,
+           y = -log10(padj))) + 
+  geom_point(aes(colour = gene_type), 
+             alpha = 1, 
+             shape = 16,
+             size = 3) +
+    geom_hline(yintercept = -log10(0.05),
+             linetype = "dashed") + 
+  geom_vline(xintercept = c(-0.7, 0.7),
+             linetype = "dashed") +
+  scale_colour_manual(values = cols) +      
+  xlim(-7, 7) +
+  theme_classic() +
+  labs(x = expression("log"["2"] ~ "(fold change)"),
+       y = expression("-log"["10"] ~ "(adjusted P-value)"),
+       colour = "Expression \nchange") +
+  theme(axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.text = element_text(size = 18),
+        legend.title = element_text(size = 18))
+
+  
+  
+  geom_point(data = gp_Selscan_ns_Volc_LOC102656070, shape = 21, size = 3, fill = "#5b5b5b", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_ns_Volc_LOC102656070, aes(label = symbol), nudge_x = 0.5, nudge_y = 2.85) + # OK
+  geom_point(data = gp_Selscan_ns_Volc_LOC408315, shape = 21, size = 3, fill = "#5b5b5b", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_ns_Volc_LOC408315, aes(label = symbol), nudge_x = -2, nudge_y = -2) + 
+  geom_point(data = gp_Selscan_ns_Volc_LOC408343, shape = 21, size = 3, fill = "#5b5b5b", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_ns_Volc_LOC408343, aes(label = symbol), nudge_x = 2.5, nudge_y = 0.65) + 
+  geom_point(data = gp_Selscan_ns_Volc_LOC551123, shape = 21, size = 3, fill = "#5b5b5b", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_ns_Volc_LOC551123, aes(label = symbol), nudge_x = 2, nudge_y = 1.85) + 
+  geom_point(data = gp_Selscan_ns_Volc_LOC551356, shape = 21, size = 3, fill = "#5b5b5b", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_ns_Volc_LOC551356, aes(label = symbol), nudge_x = 2.2, nudge_y = 1.5) + 
+  geom_point(data = gp_Selscan_ns_Volc_LOC552844, shape = 21, size = 3, fill = "#5b5b5b", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_ns_Volc_LOC552844, aes(label = symbol), nudge_x = 2.5, nudge_y = 0) + 
+  geom_point(data = gp_Selscan_ns_Volc_LOC726656, shape = 21, size = 3, fill = "#5b5b5b", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_ns_Volc_LOC726656, aes(label = symbol), nudge_x = 2, nudge_y = -2) + # OK but plot gp_Selscan_up_Volc_LOC413698 before.
+  geom_point(data = gp_Selscan_dw_Volc_LOC100578929, shape = 21, size = 3, fill = "#00a8c5", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_dw_Volc_LOC100578929, aes(label = symbol), nudge_x = -1.5, nudge_y = 0.5) + # OK
+  geom_point(data = gp_Selscan_dw_Volc_LOC411053, shape = 21, size = 3, fill = "#00a8c5", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_dw_Volc_LOC411053, aes(label = symbol), nudge_x = -2.15, nudge_y = 1.5) + # OK
+  geom_point(data = gp_Selscan_dw_Volc_LOC411569, shape = 21, size = 3, fill = "#00a8c5", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_dw_Volc_LOC411569, aes(label = symbol), nudge_x = -2, nudge_y = -1.5) + # OK
+  geom_point(data = gp_Selscan_dw_Volc_LOC725031, shape = 21, size = 3, fill = "#00a8c5", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_dw_Volc_LOC725031, aes(label = symbol), nudge_x = -1, nudge_y = 1.05) + # OK
+  geom_point(data = gp_Selscan_up_Volc_LOC413698, shape = 21, size = 3, fill = "#da3700", colour = "black") + 
+  geom_label_repel(data = gp_Selscan_up_Volc_LOC413698, aes(label = symbol), nudge_x = 1.55, nudge_y = -1) +  # OK
+  
+  scale_colour_manual(values = cols) +      
+  xlim(-7, 7) +
+  theme_classic() +
+  labs(x = expression("log"["2"] ~ "(fold change)"),
+       y = expression("-log"["10"] ~ "(adjusted P-value)"),
+       colour = "Expression \nchange") +
+  theme(axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.text = element_text(size = 18),
+        legend.title = element_text(size = 18))
+
+ggsave("./Volcano_general.png", Volc, dpi = 600, height = 10, width = 10)
+
+Volc <- ggplot(data = high_vs_low,
+       aes(x = log2fold_change,
+           y = -log10(padj))) + 
+  geom_point(aes(colour = gene_type), 
+             alpha = 0.7, 
+             shape = 16,
+             size = 1.5) +
+  geom_point(data = gp_CHC_DEG_Ss_Hl,
+             shape = 21,
+             size = 3, 
+             fill = "#00a8c5", 
+             colour = "black") + 
+  geom_point(data = gp_CHC_DEG_Ss_Ll,
+             shape = 21,
+             size = 3, 
+             fill = "#0072b2", 
+             colour = "black") + 
+  geom_point(data = gp_CHC_DEGs,
+             shape = 21,
+             size = 3, 
+             fill = "#5dc8ff", 
+             colour = "black") + 
+  geom_point(data = gp_DEGs_Ss_hl_down,
+             shape = 21,
+             size = 3, 
+             fill = "#006883", 
+             colour = "black") + 
+  geom_point(data = gp_DEGs_Ss_Ll_down,
+             shape = 21,
+             size = 3, 
+             fill = "#7084b6", 
+             colour = "black") + 
+  geom_point(data = gp_DEGs_Ss_Ll_up,
+             shape = 21,
+             size = 4, 
+             fill = "#eca741", 
+             colour = "black") + 
+  geom_point(data = gp_DEGs_Ss_hl_up,
+             shape = 21,
+             size = 3, 
+             fill = "#da3700", 
+             colour = "black") +
+  
+  geom_hline(yintercept = -log10(0.05),
+             linetype = "dashed") + 
+  geom_vline(xintercept = c(-0.7, 0.7),
+             linetype = "dashed") +
+  scale_colour_manual(values = cols) +      
+  xlim(-4.5, 4.5) +
+  labs(title = "Highland - Lowland DEGs",
+       x = expression("log"["2"] ~ "(fold change)"),
+       y = expression("-log"["10"] ~ "(adjusted P-value)"),
+       colour = "Expression \nchange") +
+  theme(plot.title = element_text(size = ),
+        axis.text.x = element_text(size = 18),
+        axis.text.y = element_text(size = 14),
+        axis.title.x = element_text(size = 14),
+        axis.title.y = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 12))
+  
+Volc
+
+```
