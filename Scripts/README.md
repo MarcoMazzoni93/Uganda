@@ -24,9 +24,11 @@ Rscript to plot Principal component analysis, and to output the tree used to plo
 ### pltXPnsl.R
 Rscript to plot the XP-nsl values and an average based on a sliding window
 
+### pltXPnsl.R
+Rscript to plot the genome wide and chromosome 7 and chromosome 9 FST values and an average based on a sliding window as in /Uganda_DEGs/Figures/Figure_2.png
+
 ### run_kallisto.sh
 Script used to make Transcriptome index (Amel.idx) and run callisto to quantify counts
 
 ### venn_diag.R
 Rscript used to plot shared and unique genes detected from XP-nsl analysis
-
