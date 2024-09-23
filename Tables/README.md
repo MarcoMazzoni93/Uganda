@@ -12,3 +12,5 @@ The symmetric matrix represent the genome wide comparison between all population
 | Rwenzori | highland | RWHL | 18 | 0.012 | 0.016 | 0.015 | 0.017 | - | 0.024 |
 |          | lowland | RWLL | 6 | 0.024 | 0.022 | 0.028 | 0.023 | 0.024 | - |
 ###### *MF: Mau forest, MS: Mau savannah, MKF: Mt. Kenya forest, MKS: Mt. Kenya savannah, RWHL: Rwenzori forest, RWLL: Rwenzori savannah.
+
+### Table 2 . 
