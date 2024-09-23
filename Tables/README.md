@@ -91,3 +91,19 @@ when only the p-value is considered. A star (*) near the log2FC value means that
 | LOC408343 | CM009941.2 | 3.78 |	0.686 | 1.89e-02 |
 | LOC411569 | CM009945.2 | 3.23 |	-0.812* | 4.71e-02 |
 | LOC552844 | CM009945.2 | 3.71 |	0.682 | 2.22e-02 |
+
+# Index of supplementary tables
+
+Supplementary tables can be found in the file ./Supplementary Tables.xlsx
+
+### Supplementary Table 1. Uganda elevation collection and coordinates
+### Supplementary Table 2. Samples included in the study and relatives coordinates of collection (where it was described in the original paper)
+### Supplementary Table 3. List of SNPs with FST higher than 0.5 falling inside the r7 region. The INFO field states if the mutation is synonymous or non synonymous and the gene associated to it
+### Supplementary Table 4. List of SNPs with FST higher than 0.5 falling inside UTRs regions. The INFO field states if the mutation is relative to the 5' or 3' UTR and the gene associated to it
+### Supplementary Table 5. Genes falling inside 5% windows in Mau region
+### Supplementary Table 6. Genes falling inside 5% windows in Mt. Kenya region
+### Supplementary Table 7. Genes falling inside 5% windows in Rwenzori mountain region
+### Supplementary Table 8. GO terms for selection scan analysis of Mau region population
+### Supplementary Table 9. GO terms for selection scan analysis of the Mt. Kenya population
+### Supplementary Table 10. GO terms for selection scan analysis of the Rwenzori mountains population
+### Supplementary Table 11. Unique and common genes related to GO:0004930. UGD: Rwenzori mountains population, MTK: Mt. Kenya population, MAU: Mau region population.
