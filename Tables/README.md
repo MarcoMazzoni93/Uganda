@@ -16,7 +16,7 @@ The symmetric matrix represent the genome wide comparison between all population
 ### Table 2. Frequency of r7 and r9 inversion polymorphisms in the three considered populations, and relative FST values when compared to other populations.
 The frequency reported is the frequency of the INV allele over the overall number of alleles; the lower triangle shows FST. values relative to the r  7 inversion; the upper triangle shows FST values relative to the r9 inversions.
 
-| | | | | | | | | | Genetic differentiation (FST) |
+| | | | | | | Genetic differentiation (FST) | | | |
 |---|---|---|---|---|---|---|---|---|---|
 | | | | Frequency | r9 |
 | | Label* | r7 | r9 | MF | MS | MKF | MKS | RWHL | RWLL |
