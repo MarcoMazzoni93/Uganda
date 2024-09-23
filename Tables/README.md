@@ -26,3 +26,4 @@ The frequency reported is the frequency of the INV allele over the overall numbe
 | | MKS | 0.2 | 0.2 | 0.442 | 0.035 | 0.563 | - | 0.226 | 0.011 |
 | | RWHL | 0.89 | 0.92 | 0.099 | 0.410 | 0.150 | 0.493 | - | 0.279 |
 | | RWLL | 0.25 | 0.08 | 0.309 | 0.024 | 0.493 | 0.139 | 0.395 | - |
+###### *MF: Mau Forest; MS: Mau Savannah; MKF: Mount Kenya Forest; MKS: Mount Kenya Savannah; RWHL: Rwenzori Highland; RWLL: Rwenzori Lowland.
