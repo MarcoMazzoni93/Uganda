@@ -1,1 +1,1 @@
-#RScript Repository for Uganda project
+# Script Repo for Uganda project
