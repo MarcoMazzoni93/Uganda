@@ -18,3 +18,5 @@ The frequency reported is the frequency of the INV allele over the overall numbe
 
 | | | | | Genetic differentiation (FST) |
 |---|---|---|---|---|
+| | | | Frequency | r9 |
+| | Label* | r7 | r9 | MF | MS | MKF | MKS | RWHL | RWLL |
