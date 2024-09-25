@@ -16,6 +16,7 @@ library(tximport)
 library(ggplot2)
 library(GEOquery)
 library(readr)
+library(DEGreport)
 library(CorLevelPlot)
 library(tidyverse)
 library(dplyr)
@@ -28,7 +29,7 @@ library(igraph)
 library(rstatix)
 ```
 
-```{r Load Data and preprocessing}
+```{r Comparison of r7 INV STD HET}
 
 dir <- getwd()
 
@@ -47,14 +48,72 @@ samples$r7 <- factor(samples$r7, levels = c("STD", "HET", "INV"))
 txi <- tximport(files, type = "kallisto", tx2gene = tx2_gene)
 dds <- DESeqDataSetFromTximport(txi, colData = samples, design = ~r7)
 dds <- DESeq(dds)
+dds_WAL <- DESeq(dds)
+dds_LRT <- DESeq(dds, test = "LRT", reduced = ~1)
+res_WAL <- results(dds_WAL)
+res_LRT <- results(dds_LRT)
 
+sig_res_WAL <- res_WAL %>%
+               data.frame() %>%
+               rownames_to_column(var="gene") %>% 
+               as_tibble() %>% 
+               filter(padj < 0.05)
+ 
+# Get sig gene lists
+sigWAL_genes <- sig_res_WAL %>% 
+                pull(gene)
+                
+length(sigWAL_genes)
+
+# Subset the LRT results to return genes with padj < 0.05
+sig_res_LRT <- res_LRT %>%
+               data.frame() %>%
+               rownames_to_column(var="gene") %>% 
+               as_tibble() %>% 
+               filter(padj < 0.05)
+ 
+# Get sig gene lists
+sigLRT_genes <- sig_res_LRT %>% 
+                pull(gene)
+
+sig_res_LRT
+    
+clustering_sig_genes <- sig_res_LRT %>%
+                  arrange(padj) %>%
+                  head(n=15)
+
+
+rld_mat_rlog <- rlog(dds_LRT, blind = TRUE)
+rld_mat_norT <- normTransform(dds_LRT)
+rld_mat_vst_ <- vst(dds_LRT, blind = TRUE)
+
+rld_mat_rlog <- assay(rld_mat_rlog)
+rld_mat_norT <- assay(rld_mat_norT)
+rld_mat_vst_ <- assay(rld_mat_vst_)
+
+cluster_rlog <- rld_mat_rlog[clustering_sig_genes$gene,]
+cluster_norT <- rld_mat_norT[clustering_sig_genes$gene,]
+cluster_vst_ <- rld_mat_vst_[clustering_sig_genes$gene,]
+
+clusters <- degPatterns(cluster_rlog, metadata = samples, time = "run", col="r7", minc = 1, skipDendrogram = T)
+clusters <- degPatterns(cluster_norT, metadata = samples, time = "r7", col="run", minc = 1, skipDendrogram = T)
+clusters <- degPatterns(cluster_vst_, metadata = samples, time = "r7", col="run", minc = 1, skipDendrogram = T)
+
+### The three normalization methods are all equal.
+write.table(sig_res_LRT, "./sig_res_LRT.csv")
+clusters_plt <- clusters$plot
+ggsave("./clusters_INV_STD_HET.png", clusters_plt, width = 10, height = 10, dpi = 300)
+
+```
+
+```{r d3d function TukeyHSD or Dunn}
 
 r7_genes <- c("102656070", "552005", "412896", "409158", "552600", "100576146", "411814", "552586", "413699", "412994", "413192", "726399", "726699", "413698", "100576110", "411683", "726656", "100578523", "411685", "413721", "413720", "100576260", "552491", "102655859", "100576298")
 
 
 d3d <- function(r7_gene){ ### plot and write the differences between three groups given a gene name in the dataset
   data <- plotCounts(dds, 
-                     gene = "412994", 
+                     gene = r7_gene, 
                      intgroup = c("r7"), 
                      returnData = TRUE)
   plot <- ggplot(data, aes(x=interaction(r7), y=count, color=r7)) + 
@@ -80,8 +139,8 @@ d3d <- function(r7_gene){ ### plot and write the differences between three group
     print("implementing Kruskal-Wallis with Dunn Posthoc test...")
     
     KT <- data %>% kruskal_test(count ~ r7)
-    Dunn <- data %>% dunn_test(count ~ r7, p.adjust.method = "BY") 
-    write.table(Dunn, file = paste("./byDunn_LOC", "412994", ".csv", sep = ""))
+    Dunn <- data %>% dunn_test(count ~ r7, p.adjust.method = "BH") 
+    write.table(Dunn, file = paste("./Dunn_LOC", r7_gene, ".csv", sep = ""))
     
   } else {  
     print("Data is normal distributed...")
@@ -109,9 +168,6 @@ for (name in r7_genes){
   d3d(name)
   
 }
-
-
-
 ```
 
 ```{r DESEQ2 main analysis}
@@ -140,7 +196,7 @@ smallestGroupSize <- 1
 keep <- rowSums(counts(dds) > 5)
 dds <- dds[keep,]
 
-res <- results(dds, alpha = 0.05, contrast = c("r7","STD","HET")) #Low is the reference
+res <- results(dds, alpha = 0.05, contrast = c("condition","Low","High")) #Low is the reference
 res_complete <- res
 res <- res[order(res$padj),]
 res <- head(res, n = sum(res$padj < 0.05, na.rm = TRUE))
@@ -148,6 +204,7 @@ res <- head(res, n = sum(res$padj < 0.05, na.rm = TRUE))
 #Write results to CSV file
 write.csv(res, file = "stdhet_r7.csv")
 write.csv(res_complete, file = "std_het_r7_complete.csv")
+
 ```
 
 # Volcano Plot
