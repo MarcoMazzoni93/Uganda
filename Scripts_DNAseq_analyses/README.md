@@ -1,4 +1,4 @@
-## DNA-seq read mapping and variant calling![image](https://github.com/user-attachments/assets/861dfd31-48cb-4f30-89ef-14a12b104e29)
+## DNA-seq read mapping and variant calling
 
 
 Adapter sequences from raw Illumina sequencing reads were trimmed using CUTADAPT v2.6 (Martin et al., 2011). For paired-end reads, we additionally set the minimum read length '-m' to 50 and enabled the 'paired-output' option for read trimming. The quality of the reads was assessed with FASTQC v0.12.1 (Andrews, et al., 2012). The reads were then aligned to the honey bee reference genome Amel_HAv3.1 (Wallberg et al. 2019) using the BURROW WHEELER ALIGNER (BWA) v0.7.17.1188 with the BWA-MEM algorithm (Li & Durbin, 2009).
