@@ -1,3 +1,6 @@
+## DNA-seq read mapping and variant calling![image](https://github.com/user-attachments/assets/861dfd31-48cb-4f30-89ef-14a12b104e29)
+
+
 Adapter sequences from raw Illumina sequencing reads were trimmed using CUTADAPT v2.6 (Martin et al., 2011). For paired-end reads, we additionally set the minimum read length '-m' to 50 and enabled the 'paired-output' option for read trimming. The quality of the reads was assessed with FASTQC v0.12.1 (Andrews, et al., 2012). The reads were then aligned to the honey bee reference genome Amel_HAv3.1 (Wallberg et al. 2019) using the BURROW WHEELER ALIGNER (BWA) v0.7.17.1188 with the BWA-MEM algorithm (Li & Durbin, 2009).
 
 SNP calling was carried out with ‘HaplotypeCaller’ from GATK4 V4.3.0.0, followed by joint genotyping using the ‘GenotypeGVCFs’ function (Poplin, et al., 2017; Van der Auwera, et al., 2013). Data were imported by chromosome with ‘GenomicsDBImport’ and a batch size of 20. The resulting VCFs were merged with BCFTOOLS v1.11 (Danecek et al., 2021). Allele balance for each variant was annotated with GATK3 v3.8.1.0, and filtered using VCFFILTER with the condition ‘ABHet > 0.25 & ABHet < 0.75 | ABHet < 0.01‘ (Garrison et al., 2022).
