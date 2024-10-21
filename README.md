@@ -1,6 +1,6 @@
 # The genomic landscape of high-altitude adaptation in East African mountain honey bees (*Apis mellifera*)
-#### Marco Mazzoni<sup>1</sup>, Florian Loidolt2, Sonja Kersten1, Amulen Deborah Ruth3, Patrick Vudriko3, Philipp Meyer4, Victor Sebastian Scharnhorst4, Ricarda Scheiner2 and Martin Hasselmann1
-###### Ciao
+#### Marco Mazzoni<sup>1</sup>, Florian Loidolt<sup>2</sup>, Sonja Kersten<sup>1</sup>, Amulen Deborah Ruth<sup>3</sup>, Patrick Vudriko<sup>3</sup>, Philipp Meyer<sup>4</sup>, Victor Sebastian Scharnhorst<sup>4</sup>, Ricarda Scheiner<sup>2</sup> and Martin Hasselmann<sup>1</sup>
+###### <sup>1</sup>Department of Livestock Population Genomics, Institute of Animal Science, University of Hohenheim, Garbenstrasse 17, 70599, Stuttgart, Germany
 
 ### Abstract
 
