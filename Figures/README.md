@@ -15,6 +15,9 @@ Selection scan XP-nSl algorithm on Mau (blue), Mt. Kenya (Green) and Rwenzori (B
 ### Figure 5 Differentially Expressed Genes (DEGs) derived from the comparison of Rwenzori mountains highland versus lowland samples.
 Highlighted are the common genes identified in both, the selection scan analysis and the DEGs analysis. The blue scale represents downregulated genes in the reference population (savannah lowland honey bees) and the orange scale represents the upregulated genes in the reference population. Black dots show significantly differently expressed genes (p < 0.05) but with insufficient change in expression given the chosen threshold of 0.7.
 
+### Figure 6 Gene expression of significant genes given the three r7 inversion status. 
+Inverted homozygous (INV – orange), heterozygous (HET – grey) and Non-Inverted homozygous (STD – black) were compared in the same DESeq2 model. The genes are ordered based on significance from left to right. Letters near the groups represent results of Tukey HSD test, if two groups share the same letters then they are not statistically different. 
+
 # Supplementary Figure Index
 
 ### Supplementary figure 1 PCA of samples belonging to the A-lineage
