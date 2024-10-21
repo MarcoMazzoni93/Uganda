@@ -63,18 +63,7 @@ The threshold selected was ±0.7 log2FC and p-value ≤ 0.05. MF: Molecular Func
 | KEGG:00030 | Pentose phosphate pathway | KEGG | 0.0286 | 
 | KEGG:04146 | Peroxisome | KEGG | 0.0315 |
 
-### Table 4. Effect of the r7 and r9 inversion on gene expression when only homozygous inverted honey bees were compared to homozygous non-inverted.
-
-| Gene ID | Description | Region | log2FC | pvalue |
-| ------- | ----------- | ------ | ------ | ------ |
-| LOC412994 | octopamine receptor beta-3R | r7 | 1.285 | 4.79e-06 |
-| LOC413192 | protein HGH1 homolog | r7 | -0.939 | 3.00e-04 |
-| LOC413698	| octopamine receptor beta-1R	| r7 | 1.583 | 1.91e-07 |
-| LOC552005 | uncharacterized | r7 | -2.253 |	1.8e-03 |
-| LOC552586	| cytochrome c oxidase assembly factor 7 homolog | r7 | -1.075 | 2.00e-03 |
-| LOC409025 | apolipoprotein D | r9 | -1.051 | 4.61e-02 |
-
-### Table 5. Genes detected both by selection scan and differentially expressed genes analysis
+### Table 4. Genes detected both by selection scan and differentially expressed genes analysis
 when only the p-value is considered. A star (*) near the log2FC value means that it is above/below the selected threshold of ± 0.7.
 
 | Gene ID |	Chromosome | XP-nsl | log2FC | DEG p-value |
@@ -91,6 +80,13 @@ when only the p-value is considered. A star (*) near the log2FC value means that
 | LOC408343 | CM009941.2 | 3.78 |	0.686 | 1.89e-02 |
 | LOC411569 | CM009945.2 | 3.23 |	-0.812* | 4.71e-02 |
 | LOC552844 | CM009945.2 | 3.71 |	0.682 | 2.22e-02 |
+
+### Table 5. Significant differentially expressed genes (DEGs) with a model accounting for inversion status only. Tukey Honestly Significance Difference (HSD) test was applied to understand weather all three groups, Inverted homozygous (INV), Non-Inverted homozygous (STD) and heterozygous (HET), where equal or different. A star (*) near the p-value represent a significance level of α ≤ 0.05, two stars near the p-value represent a significance level of α ≤ 0.001.
+| Gene ID | log<sub>2</sub>FC | p-value (DESeq2) | Comparison | p-value (Tukey HSD) |
+| ------- | ----------------- | ---------------- | ---------- | ------------------- |
+|         |                   |                  | STD - INV  | 6.58e-04**          |
+|LOC413698| 1.582             | 7.50e-05**       | STD - HET  | 3.19e-02*           |
+
 
 # Index of supplementary tables
 
