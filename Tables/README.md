@@ -82,10 +82,18 @@ when only the p-value is considered. A star (*) near the log2FC value means that
 | LOC552844 | CM009945.2 | 3.71 |	0.682 | 2.22e-02 |
 
 ### Table 5. Significant differentially expressed genes (DEGs) with a model accounting for inversion status only. Tukey Honestly Significance Difference (HSD) test was applied to understand weather all three groups, Inverted homozygous (INV), Non-Inverted homozygous (STD) and heterozygous (HET), where equal or different. A star (*) near the p-value represent a significance level of α ≤ 0.05, two stars near the p-value represent a significance level of α ≤ 0.001.
+
 | Gene ID | log<sub>2</sub>FC | p-value (DESeq2) | Comparison | p-value (Tukey HSD) |
 | ------- | ----------------- | ---------------- | ---------- | ------------------- |
 |         |                   |                  | STD - INV  | 6.58e-04**          |
 |LOC413698| 1.582             | 7.50e-05**       | STD - HET  | 3.19e-02*           |
+|         |                   |                  | HET - INV  | 5.38e-02            |
+|         |                   |                  | STD - INV  | 4.75e-05**          |
+|LOC552586| -1.074            | 9.35e-03*        | STD - HET  | 6.57e-04**          |
+|         |                   |                  | HET - INV  | 9.31e-02            |
+|         |                   |                  | STD - INV  | 6.89e-04**          |
+|LOC552005| -2.263            | 1.19e-02*        | STD - HET  | 6.79e-02            |
+|         |                   |                  | HET - INV  | 2.68e-02*           |
 
 
 # Index of supplementary tables
