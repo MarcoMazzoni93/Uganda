@@ -20,26 +20,32 @@
 
                                       
                                           | --- | WGS 
-                                          | (BMK: BMK230220- BG95202R)
-                     | --------- Uganda - |  
-                     |                    | (BMK: BMK230220- BG95203L)
-                     |                    | --- | RNAseq   
+                                          | (BMK: BMK230220-BG95202R)
+                     | --------- Uganda - | 
+                     |                    | (BMK: BMK230220-BG95203L)
+                     |                    | --- | RNASeq   
                      |
                      |
                      |
                      |
-                     | 
-                     | 
-                     | 
-    ROOT -----       | --------- Tanzania - | 
-                     | 
-                     |
-                     |
-                     |
-                     |
-                     |
-                     |
-                     | 
-                     | 
-                     | --------- Kenya - | 
-               
+                     |                    | --- | WGS
+                     |                    | (BMK: BMK230220-S01-ZX01-0101/2)
+                     |                    |
+    ROOT -----       | ------- Tanzania - | 
+                     |                    |
+                     |                    | (BMK: BMK230220-S01-ZX01-0101)
+                     |                    | --- | RNASeq
+                     |                    
+                     |                                   | --- | Translocation 
+                     |                                   |
+                     |                   | --- | WGS --- |
+                     |                   |               |
+                     |                   |               | --- | Normal
+                     | --------- Kenya - |   
+                                         |                  | --- | Translocation 
+                                         |                  |  
+                                         | --- | RNASeq --- | 
+                                                            | (BMK230220-BG952-S01-ZX01-0101)                  
+                                                            | --- | Normal
+                                                             
+                                                             
