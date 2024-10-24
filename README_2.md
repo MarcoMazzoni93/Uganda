@@ -17,10 +17,21 @@
 
 ### Index of Content
 
-                ____________ Uganda
+
+                                      
+                                       __ WGS
+                                     /
+               | --------- Uganda - | 
+               |                     \ __ RNAseq
+               |                       
+               |
+               |
+               |
+               |
                | 
                | 
-    ROOT ----- |
+               | 
+    ROOT ----- | --------- Tanzania
     
     
       
