@@ -59,18 +59,18 @@
               |
               |
               |                                                                                            
-              |                                                                                            |
+              |                                                                                            
               |                                                                                            
               |                                                                                            | --- | Python 
               |                                                                                            |
               | ---------------------------------------------------------------------------- | SCRIPTS --- | --- | Bash
-              |                                                        | --- | Figures                     |   
-              |                                           | --- | Main |                                   | --- | R
-              |                                           |            | --- | Tables
-              |                          | ---- | Paper 1 |
-              |                          |                |                     | --- | Figures
-              |                          |                | --- | Supplementary |                                                         
-              | ----------- | Papers --- | ---- | Paper 2                       | --- | Tables                                      
+              |                                                          | --- | Figures                     |   
+              |                                             | --- | Main |                                   | --- | R
+              |                                             |            | --- | Tables
+              |                          | ---- | Paper 1 - |
+              |                          |                  |                     | --- | Figures
+              |                          |                  | --- | Supplementary |                                                         
+              | ----------- | Papers --- | ---- | Paper 2                         | --- | Tables                                      
                                          |                 
                                          |                 
                                          | ---- | Paper 3 
