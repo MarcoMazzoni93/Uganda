@@ -2,7 +2,7 @@
 
 #### Project Name: **The molecular mechanism underlying local adaptation to high elevation habltats in the honeybee _Apis mellifera_**
 ##### Contributors:
-###### - Marco Mazzoni, MSc: Department of Livestock Population Genomics, Institute of Animal Science, University of Hohenheim, Garbenstrasse 17, 70599, Stuttgart, Germany
+- ###### Marco Mazzoni, MSc: Department of Livestock Population Genomics, Institute of Animal Science, University of Hohenheim, Garbenstrasse 17, 70599, Stuttgart, Germany
 - Martin Hasselmann, Prof Dr: Department of Livestock Population Genomics, Institute of Animal Science, University of Hohenheim, Garbenstrasse 17, 70599, Stuttgart, Germany
 - Sonja Kersten, PhD: Department of Livestock Population Genomics, Institute of Animal Science, University of Hohenheim, Garbenstrasse 17, 70599, Stuttgart, Germany
 - Florian Loidolt, MSc: Behavioural Physiology and Sociobiology, Universität Würzburg, Biocenter, Am Hubland, 97074, Würzburg, Germany
