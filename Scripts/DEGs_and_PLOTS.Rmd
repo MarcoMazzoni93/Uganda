@@ -47,62 +47,8 @@ samples$r7 <- factor(samples$r7, levels = c("STD", "HET", "INV"))
 
 txi <- tximport(files, type = "kallisto", tx2gene = tx2_gene)
 dds <- DESeqDataSetFromTximport(txi, colData = samples, design = ~r7)
-dds <- DESeq(dds)
-dds_WAL <- DESeq(dds)
-dds_LRT <- DESeq(dds, test = "LRT", reduced = ~1)
-res_WAL <- results(dds_WAL)
-res_LRT <- results(dds_LRT)
-
-sig_res_WAL <- res_WAL %>%
-               data.frame() %>%
-               rownames_to_column(var="gene") %>% 
-               as_tibble() %>% 
-               filter(padj < 0.05)
- 
-# Get sig gene lists
-sigWAL_genes <- sig_res_WAL %>% 
-                pull(gene)
-                
-length(sigWAL_genes)
-
-# Subset the LRT results to return genes with padj < 0.05
-sig_res_LRT <- res_LRT %>%
-               data.frame() %>%
-               rownames_to_column(var="gene") %>% 
-               as_tibble() %>% 
-               filter(padj < 0.05)
- 
-# Get sig gene lists
-sigLRT_genes <- sig_res_LRT %>% 
-                pull(gene)
-
-sig_res_LRT
-    
-clustering_sig_genes <- sig_res_LRT %>%
-                  arrange(padj) %>%
-                  head(n=15)
 
 
-rld_mat_rlog <- rlog(dds_LRT, blind = TRUE)
-rld_mat_norT <- normTransform(dds_LRT)
-rld_mat_vst_ <- vst(dds_LRT, blind = TRUE)
-
-rld_mat_rlog <- assay(rld_mat_rlog)
-rld_mat_norT <- assay(rld_mat_norT)
-rld_mat_vst_ <- assay(rld_mat_vst_)
-
-cluster_rlog <- rld_mat_rlog[clustering_sig_genes$gene,]
-cluster_norT <- rld_mat_norT[clustering_sig_genes$gene,]
-cluster_vst_ <- rld_mat_vst_[clustering_sig_genes$gene,]
-
-clusters <- degPatterns(cluster_rlog, metadata = samples, time = "run", col="r7", minc = 1, skipDendrogram = T)
-clusters <- degPatterns(cluster_norT, metadata = samples, time = "r7", col="run", minc = 1, skipDendrogram = T)
-clusters <- degPatterns(cluster_vst_, metadata = samples, time = "r7", col="run", minc = 1, skipDendrogram = T)
-
-### The three normalization methods are all equal.
-write.table(sig_res_LRT, "./sig_res_LRT.csv")
-clusters_plt <- clusters$plot
-ggsave("./clusters_INV_STD_HET.png", clusters_plt, width = 10, height = 10, dpi = 300)
 
 ```
 
