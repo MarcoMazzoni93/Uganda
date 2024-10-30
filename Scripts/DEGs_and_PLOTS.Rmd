@@ -48,6 +48,32 @@ samples$r7 <- factor(samples$r7, levels = c("STD", "HET", "INV"))
 txi <- tximport(files, type = "kallisto", tx2gene = tx2_gene)
 dds <- DESeqDataSetFromTximport(txi, colData = samples, design = ~r7)
 
+res <- results(dds, alpha = 0.05, contrast = c("r7","STD","INV")) #Low is the reference
+res_complete <- res
+res <- res[order(res$padj),]
+res <- head(res, n = sum(res$padj < 0.05, na.rm = TRUE))
+
+#Write results to CSV file
+write.csv(res, file = "invstd_r7.csv")
+write.csv(res_complete, file = "inv_std_r7_complete.csv")
+
+res <- results(dds, alpha = 0.05, contrast = c("r7","STD","HET")) #Low is the reference
+res_complete <- res
+res <- res[order(res$padj),]
+res <- head(res, n = sum(res$padj < 0.05, na.rm = TRUE))
+
+#Write results to CSV file
+write.csv(res, file = "stdhet_r7.csv")
+write.csv(res_complete, file = "std_het_r7_complete.csv")
+
+res <- results(dds, alpha = 0.05, contrast = c("r7","HET","INV")) #Low is the reference
+res_complete <- res
+res <- res[order(res$padj),]
+res <- head(res, n = sum(res$padj < 0.05, na.rm = TRUE))
+
+#Write results to CSV file
+write.csv(res, file = "invhet_r7.csv")
+write.csv(res_complete, file = "inv_het_r7_complete.csv")
 
 
 ```
