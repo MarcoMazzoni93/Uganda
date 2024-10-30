@@ -54,7 +54,7 @@ dds <- DESeqDataSetFromTximport(txi, colData = samples, design = ~r7)
 
 ```{r d3d function TukeyHSD or Dunn}
 
-r7_genes <- c("102656070", "552005", "412896", "409158", "552600", "100576146", "411814", "552586", "413699", "412994", "413192", "726399", "726699", "413698", "100576110", "411683", "726656", "100578523", "411685", "413721", "413720", "100576260", "552491", "102655859", "100576298")
+r7_genes <- c("552005", "552586", "413698")
 
 
 d3d <- function(r7_gene){ ### plot and write the differences between three groups given a gene name in the dataset
