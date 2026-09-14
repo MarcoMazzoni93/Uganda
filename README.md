@@ -17,4 +17,4 @@ Understanding the evolutionary processes leading to differentiation within speci
 
 ### Citation
 
-If you use any of the script or data presented in this paper please cite: (CITATION WILL BE ADDED LATER)
+If you use any of the script or data presented in this paper please cite: Mazzoni, M., F. Loidolt, S. Kersten, et al. 2025. “ Genomic Landscape of High-Altitude Adaptation in East African Mountain Honey Bees (Apis mellifera).” Ecology and Evolution 15, no. 8: e71846. [https://doi.org/10.1002/ece3.71846]. 
